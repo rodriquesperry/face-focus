@@ -1,15 +1,17 @@
-import './App.css'
+import Navigation from './components/navigation/Navigation';
+import Logo from './components/logo/Logo';
+import ImageLinkForm from './components/imageLinkForm/ImageLinkForm';
+import FaceRecognition from './components/faceRecognition/FaceRecognition';
+
+import './App.css';
 
 function App() {
   return (
     <>
-    <ul>
-      <li>Header</li>
-      <li>Logo</li>
-      <li>Searchbar</li>
-      <li>HomePage</li>
-      <li>Signup/Signin</li>
-    </ul>
+    <Navigation />
+    <Logo />
+    <ImageLinkForm />
+    <FaceRecognition />
     </>
   )
 }
