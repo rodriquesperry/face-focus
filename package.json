@@ -10,11 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "particles-bg": "^2.5.5",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-parallax-tilt": "^1.7.284",
-    "tachyons": "^4.12.0"
+    "tachyons": "^4.12.0",
+    "tsparticles": "^3.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
