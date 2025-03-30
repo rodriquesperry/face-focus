@@ -9,7 +9,6 @@ main {
 	align-items: center;
 	z-index: 1;
 }
-
-#nav-container {
+.nav-link {
 	z-index: 100;
 }
