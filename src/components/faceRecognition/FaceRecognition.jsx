@@ -6,7 +6,7 @@ const FaceRecognition = ({ imageUrl }) => {
 		<>
 			{imageUrl && (
 				<div className='faceRecognitionContainer'>
-					<img src={imageUrl} alt='Picture' />
+					<img id='inputimage' src={imageUrl} alt='Picture' />
 				</div>
 			)}
 		</>

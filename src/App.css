@@ -7,4 +7,9 @@ main {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	z-index: 1;
+}
+
+#nav-container {
+	z-index: 100;
 }
