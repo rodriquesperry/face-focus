@@ -5,7 +5,7 @@ import ParticleBackground from './components/particleBackground/ParticleBackgrou
 import Navigation from './components/navigation/Navigation';
 import Home from './components/home/home';
 import Signin from './components/signin/Signin';
-import Register from './components/Register/Register';
+import Register from './components/register/Register';
 
 import './App.css';
 
