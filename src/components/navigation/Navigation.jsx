@@ -5,7 +5,7 @@ const Navigation = ({ onSignOut, isLoggedIn }) => {
 	const navigate = useNavigate();
 
 	const handleSignInClick = () => {
-		navigate('/home');
+		navigate('/');
 	};
 
 	const handleSignUpClick = (e) => {

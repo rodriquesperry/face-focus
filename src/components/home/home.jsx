@@ -41,7 +41,7 @@ const Home = () => {
 		body: raw,
 	};
 
-	const calculteFaceLocation = () => {
+	const calculateFaceLocation = () => {
 		// const clarifaiFace = data;
 		const image = document.getElementById('inputimage');
 
@@ -68,7 +68,7 @@ const Home = () => {
 				regions.forEach((region) => {
 					// Accessing and rounding the bounding box values
 					const boundingBox = region.region_info.bounding_box;
-					calculteFaceLocation(boundingBox);
+					calculateFaceLocation(boundingBox);
 
 					const topRow = boundingBox.top_row.toFixed(3);
 					const leftCol = boundingBox.left_col.toFixed(3);

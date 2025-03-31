@@ -1,10 +1,7 @@
 import PropTypes from 'prop-types';
 import './register.css';
 
-const Register = () => {
-	const onClickHandler = () => {
-		console.log('clicked!!!!!');
-	};
+const Register = ({ onSignIn }) => {
 
 	return (
 		<article className='br2 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center signin-form-container'>
@@ -48,10 +45,10 @@ const Register = () => {
 					</fieldset>
 					<div className='lh-copy mt3'>
 						<input
-							onClick={onClickHandler}
+							onClick={onSignIn}
 							type='button'
 							className='b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib center'
-							value='Sign Up'
+							value='Sign In'
 						/>
 					</div>
 				</form>
@@ -60,9 +57,8 @@ const Register = () => {
 	);
 };
 
-// Register.propTypes = {
-//   isLoggedin: PropTypes.func.isRequired,
-//   onSignin: PropTypes.func.isRequired,
-// };
+Register.propTypes = {
+  onSignIn: PropTypes.func.isRequired,
+};
 
 export default Register;
