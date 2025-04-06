@@ -52,7 +52,7 @@ const Navigation = ({ onSignOut, isLoggedIn }) => {
 
 Navigation.propTypes = {
 	onSignOut: PropTypes.func.isRequired,
-	isLoggedIn: PropTypes.func.isRequired,
+	isLoggedIn: PropTypes.bool.isRequired,
 };
 
 export default Navigation;

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+// import axios from 'axios';
 
 import ParticleBackground from './components/particleBackground/ParticleBackground';
 import Navigation from './components/navigation/Navigation';
@@ -10,22 +11,39 @@ import Register from './components/register/Register';
 import './App.css';
 
 function App() {
-	const [isLoggedIn, setisLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const initState = {
+		id: '',
+		name: '',
+		email: '',
+		entries: 0,
+		joined: '',
+	};
+	const [user, setUser] = useState(initState);
 	const navigate = useNavigate();
 
-	const onSignIn = () => {
-		setisLoggedIn(true);
-		navigate('/home');
+	useEffect(() => {
+		localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn));
+	}, [isLoggedIn]);
+
+	const loadUser = (data) => {
+		setUser({
+			id: data.id,
+			name: data.name,
+			email: data.email,
+			entries: data.entries,
+			joined: data.joined,
+		});
 	};
 
 	const onSignOut = () => {
-		setisLoggedIn(false);
+		setUser(initState);
+		setIsLoggedIn(false);
+    localStorage.removeItem('isLoggedIn');
 		navigate('/');
 	};
 
-	const onSignUp = () => {
-		navigate('/register');
-	};
+	console.log('App.js user after loadUser:', user);
 
 	return (
 		<div className='app-container'>
@@ -34,10 +52,20 @@ function App() {
 			<Routes>
 				<Route
 					path='/'
-					element={<Signin onSignIn={onSignIn} onSignUp={onSignUp} />}
+					element={<Signin setIsLoggedIn={setIsLoggedIn} loadUser={loadUser} />}
 				/>
-				<Route path='/register' element={<Register onSignIn={onSignIn} />} />
-				<Route path='/home' element={<Home />} />
+				<Route path='/register' element={<Register loadUser={loadUser} />} />
+				<Route
+					path='/home'
+					element={
+						<Home
+							name={user}
+							user={user}
+							setUser={setUser}
+							loadUser={loadUser}
+						/>
+					}
+				/>
 			</Routes>
 		</div>
 	);

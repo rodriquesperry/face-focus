@@ -1,7 +1,51 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import './signin.css';
 
-const Signin = ({ onSignIn, onSignUp }) => {
+const Signin = ({ setIsLoggedIn, loadUser }) => {
+	const url = import.meta.env.VITE_API_URL;
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const navigate = useNavigate();
+
+	const onEmailChange = (e) => {
+		setEmail(e.target.value);
+	};
+
+	const onPasswordChange = (e) => {
+		setPassword(e.target.value);
+	};
+
+	const onSignIn = async (email, password) => {
+		try {
+			const response = await axios.post(url, {
+				email,
+				password,
+			});
+
+      console.log('response.data= ', response.data);
+      
+
+			const user = response.data;
+
+			if (user.id) {
+				loadUser(response.data);
+				setIsLoggedIn(true);
+				navigate('/home');
+			}
+		} catch (error) {
+			console.error('Login failed:', error.response?.data || error.message);
+			alert('Login failed. Please check your credentials.');
+		}
+	};
+
+	const onSignUp = () => {
+		navigate('/register');
+	};
+
 	return (
 		<article className='br2 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center signin-form-container'>
 			<main className='pa4 black-80'>
@@ -17,6 +61,7 @@ const Signin = ({ onSignIn, onSignUp }) => {
 								type='email'
 								name='email-address'
 								id='email-address'
+								onChange={onEmailChange}
 							/>
 						</div>
 						<div className='mv3'>
@@ -28,12 +73,13 @@ const Signin = ({ onSignIn, onSignUp }) => {
 								type='password'
 								name='password'
 								id='password'
+								onChange={onPasswordChange}
 							/>
 						</div>
 					</fieldset>
 					<div className='lh-copy mt3'>
 						<input
-							onClick={onSignIn}
+							onClick={() => onSignIn(email, password)}
 							className='b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib center'
 							type='button'
 							value='Sign in'
@@ -55,9 +101,8 @@ const Signin = ({ onSignIn, onSignUp }) => {
 };
 
 Signin.propTypes = {
-	isLoggedin: PropTypes.func.isRequired,
-	onSignIn: PropTypes.func.isRequired,
-	onSignUp: PropTypes.func.isRequired,
+	setIsLoggedIn: PropTypes.func.isRequired,
+	loadUser: PropTypes.func.isRequired,
 };
 
 export default Signin;

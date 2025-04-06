@@ -1,96 +1,70 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import Logo from '../logo/Logo';
 import Rank from '../rank/Rank';
 import ImageLinkForm from '../imageLinkForm/ImageLinkForm';
 import FaceRecognition from '../faceRecognition/FaceRecognition';
+import axios from 'axios';
 
-const Home = () => {
-  const PAT = 'c54460b16f71448d9bd4526ba359d620';
-	const USER_ID = 'rock-digital-001';
-	const APP_ID = 'face-focus';
-	const MODEL_ID = 'face-detection';
-	const MODEL_VERSION_ID = '6dc7e46bc9124c5c8824be4822abe105';
+const Home = ({ user, loadUser }) => {
+	const url = import.meta.env.VITE_API_URL;
 	const [input, setInput] = useState('');
-	const [imgUrl, setImgUrl] = useState('');
+	const [imgUrl, setImgUrl] = useState(
+		'https://samples.clarifai.com/metro-north.jpg'
+	);
+	const [boxes, setBoxes] = useState([]);
+	const { name, id, entries } = user;
 
-
-  const raw = JSON.stringify({
-		user_app_id: {
-			user_id: USER_ID,
-			app_id: APP_ID,
-		},
-		inputs: [
-			{
-				data: {
-					image: {
-						url: imgUrl,
-						// "base64": IMAGE_BYTES_STRING
-					},
-				},
-			},
-		],
-	});
-
-	const requestOptions = {
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			Authorization: 'Key ' + PAT,
-		},
-		body: raw,
-	};
-
-	const calculateFaceLocation = () => {
-		// const clarifaiFace = data;
+	const calculateFaceLocation = (regions) => {
 		const image = document.getElementById('inputimage');
+		if (!image) return;
 
-		const width = Number(image.width);
-		const height = Number(image.height);
-		console.log('width: ', width);
-		console.log('height: ', height);
+		const width = image.width;
+		const height = image.height;
+
+		return regions.map((region) => {
+			const boundingBox = region.region_info.bounding_box;
+			return {
+				leftCol: boundingBox.left_col * width,
+				topRow: boundingBox.top_row * height,
+				rightCol: width - boundingBox.right_col * width,
+				bottomRow: height - boundingBox.bottom_row * height,
+			};
+		});
 	};
 
-  const onButtonSubmit = () => {
-		console.log(input);
-		fetch(
-			'https://api.clarifai.com/v2/models/' +
-				MODEL_ID +
-				'/versions/' +
-				MODEL_VERSION_ID +
-				'/outputs',
-			requestOptions
-		)
-			.then((response) => response.json())
-			.then((result) => {
-				const regions = result.outputs[0].data.regions;
+	const onButtonSubmit = async () => {
+		try {
+			const response = await axios.post(`${url}/detect-face`, {
+				imgUrl: input,
+			});
+			setImgUrl(input);
 
-				regions.forEach((region) => {
-					// Accessing and rounding the bounding box values
-					const boundingBox = region.region_info.bounding_box;
-					calculateFaceLocation(boundingBox);
+			const regions = response.data.outputs[0].data.regions;
+			if (regions) {
+				const newBoxes = calculateFaceLocation(regions);
+				setBoxes(newBoxes);
+			}
 
-					const topRow = boundingBox.top_row.toFixed(3);
-					const leftCol = boundingBox.left_col.toFixed(3);
-					const bottomRow = boundingBox.bottom_row.toFixed(3);
-					const rightCol = boundingBox.right_col.toFixed(3);
+			const entriesResponse = await axios.post(`${url}/api/image`, {
+				id: id,
+			});
 
-					region.data.concepts.forEach((concept) => {
-						// Accessing and rounding the concept value
-						const name = concept.name;
-						const value = concept.value.toFixed(4);
+			loadUser(({
+        ...user,
+				entries: entriesResponse.data,
+			}));
 
-						console.log(
-							`${name}: ${value} BBox: ${topRow}, ${leftCol}, ${bottomRow}, ${rightCol}`
-						);
-					});
-				});
-			})
-			.catch((error) => console.log('error', error));
-		setImgUrl(input);
+			console.log('entryResponse: ', entries);
+		} catch (error) {
+			console.error('Error fetching face detection: ', error);
+		}
 	};
 
-  const onInputChange = (e) => {
+	console.log('entries: ', entries);
+
+	const onInputChange = (e) => {
 		setInput(e.target.value);
 		console.log(e.target.value);
 	};
@@ -98,16 +72,25 @@ const Home = () => {
 	return (
 		<>
 			<Logo />
-			<main>
-				<Rank />
+			<main id='home-container'>
+				<Rank name={name} entries={entries} />
 				<ImageLinkForm
 					onInputChange={onInputChange}
 					onButtonSubmit={onButtonSubmit}
 				/>
-				<FaceRecognition imageUrl={imgUrl} />
+				<FaceRecognition imageUrl={imgUrl} boxes={boxes} />
 			</main>
 		</>
 	);
 };
 
 export default Home;
+
+Home.propTypes = {
+	user: PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		name: PropTypes.string,
+		entries: PropTypes.number,
+	}),
+	loadUser: PropTypes.func.isRequired,
+};

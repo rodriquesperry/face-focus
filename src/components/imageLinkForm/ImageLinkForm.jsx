@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import './imageLinkForm.css';
 
 const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
+  
 	return (
 		<div>
 			<p className='f3 center'>
@@ -22,9 +23,10 @@ const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
 	);
 };
 
+export default ImageLinkForm;
+
+
 ImageLinkForm.propTypes = {
 	onInputChange: PropTypes.func.isRequired,
 	onButtonSubmit: PropTypes.func.isRequired,
 };
-
-export default ImageLinkForm;

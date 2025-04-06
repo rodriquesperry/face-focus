@@ -1,7 +1,51 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import './register.css';
 
-const Register = ({ onSignIn }) => {
+const Register = ({ loadUser }) => {
+	const url = import.meta.env.VITE_API_URL;
+	const [name, setName] = useState('');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const navigate = useNavigate();
+
+	const onNameChange = (e) => {
+		setName(e.target.value);
+	};
+
+	const onEmailChange = (e) => {
+		setEmail(e.target.value);
+	};
+
+	const onPasswordChange = (e) => {
+		setPassword(e.target.value);
+	};
+
+	const handleRegistration = async () => {
+		try {
+			const response = await axios.post(`${url}/register`, {
+				name,
+				email,
+				password,
+			});
+
+      const user = response.data;
+      
+     loadUser(user);      
+
+
+			if (name && email && password) {
+				navigate('/');
+			} else {
+				console.log('Registration failed: ', response.data);
+			}
+		} catch (error) {
+			console.log('Error creating user: ', error);
+		}
+	};
 
 	return (
 		<article className='br2 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center signin-form-container'>
@@ -18,6 +62,7 @@ const Register = ({ onSignIn }) => {
 								type='text'
 								name='name'
 								id='name'
+								onChange={onNameChange}
 							/>
 						</div>
 						<div className='mt3'>
@@ -29,6 +74,7 @@ const Register = ({ onSignIn }) => {
 								type='email'
 								name='email-address'
 								id='email-address'
+								onChange={onEmailChange}
 							/>
 						</div>
 						<div className='mv3'>
@@ -40,15 +86,16 @@ const Register = ({ onSignIn }) => {
 								type='password'
 								name='password'
 								id='password'
+								onChange={onPasswordChange}
 							/>
 						</div>
 					</fieldset>
 					<div className='lh-copy mt3'>
 						<input
-							onClick={onSignIn}
+							onClick={handleRegistration}
 							type='button'
 							className='b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib center'
-							value='Sign In'
+							value='Sign Up'
 						/>
 					</div>
 				</div>
@@ -58,7 +105,8 @@ const Register = ({ onSignIn }) => {
 };
 
 Register.propTypes = {
-  onSignIn: PropTypes.func.isRequired,
+	onSignIn: PropTypes.func.isRequired,
+	loadUser: PropTypes.func.isRequired,
 };
 
 export default Register;
