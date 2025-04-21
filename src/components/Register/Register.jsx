@@ -37,7 +37,7 @@ const Register = ({ loadUser }) => {
      loadUser(user);      
 
 
-			if (name && email && password) {
+			if (user.id) {
 				navigate('/');
 			} else {
 				console.log('Registration failed: ', response.data);

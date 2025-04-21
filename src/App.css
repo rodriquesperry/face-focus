@@ -1,5 +1,6 @@
 .app-container {
 	min-height: 100vh;
+  background: linear-gradient(89deg, #ff5edf 0%, #04c8de 100%);
 }
 
 #home-container {
@@ -7,8 +8,7 @@
 	flex-direction: column;
 	align-items: center;
 	z-index: 999;
-  background: linear-gradient(89deg, #ff5edf 0%, #04c8de 100%);
-  min-height: 100vh;
+	min-height: 100vh;
 }
 
 .nav-link {

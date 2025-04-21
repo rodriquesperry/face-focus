@@ -25,11 +25,8 @@ const Signin = ({ setIsLoggedIn, loadUser }) => {
 				email,
 				password,
 			});
-
-      console.log('response.data= ', response.data);
       
-
-			const user = response.data;
+			const user = response.data;      
 
 			if (user.id) {
 				loadUser(response.data);

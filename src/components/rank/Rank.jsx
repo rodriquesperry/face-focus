@@ -5,8 +5,16 @@ const Rank = ({ name, entries }) => {
 	let [rank, setRank] = useState(0);
 
   useEffect(() => {
-    if (entries > 0) {
-      setRank((prev) => prev + 1);
+    if (entries > 0 && entries <= 3) {
+      setRank(1);
+    } else if (entries > 3 && entries <= 6) {
+      setRank(2);
+    } else if (entries > 6 && entries <= 10) {
+      setRank(3);
+    } else if (entries > 10 && entries <= 15) {
+      setRank(4);
+    } else if (entries > 15) {
+      setRank(5);
     }
   }, [entries])
 

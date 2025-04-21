@@ -9,10 +9,8 @@ import axios from 'axios';
 
 const Home = ({ user, loadUser }) => {
 	const url = import.meta.env.VITE_API_URL;
-	const [input, setInput] = useState('');
-	const [imgUrl, setImgUrl] = useState(
-		'https://samples.clarifai.com/metro-north.jpg'
-	);
+	const [input, setInput] = useState(null);
+	const [imgUrl, setImgUrl] = useState(null);
 	const [boxes, setBoxes] = useState([]);
 	const { name, id, entries } = user;
 
@@ -47,22 +45,23 @@ const Home = ({ user, loadUser }) => {
 				setBoxes(newBoxes);
 			}
 
+			if (!input) {
+				alert('You must enter an image URL.');
+				return;
+			}
+
 			const entriesResponse = await axios.post(`${url}/api/image`, {
 				id: id,
 			});
 
-			loadUser(({
-        ...user,
+			loadUser({
+				...user,
 				entries: entriesResponse.data,
-			}));
-
-			console.log('entryResponse: ', entries);
+			});
 		} catch (error) {
 			console.error('Error fetching face detection: ', error);
 		}
 	};
-
-	console.log('entries: ', entries);
 
 	const onInputChange = (e) => {
 		setInput(e.target.value);

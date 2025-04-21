@@ -6,44 +6,46 @@ import ParticleBackground from './components/particleBackground/ParticleBackgrou
 import Navigation from './components/navigation/Navigation';
 import Home from './components/home/home';
 import Signin from './components/signin/Signin';
-import Register from './components/register/Register';
+import Register from './components/register/Register.jsx';
 
 import './App.css';
 
 function App() {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(() => JSON.parse(localStorage.getItem('isLoggedIn')) || false);
 	const initState = {
-		id: '',
+    id: '',
 		name: '',
 		email: '',
 		entries: 0,
 		joined: '',
 	};
-	const [user, setUser] = useState(initState);
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const [user, setUser] = useState(() => storedUser || initState);
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn));
-	}, [isLoggedIn]);
-
+  
 	const loadUser = (data) => {
-		setUser({
-			id: data.id,
+    setUser({
+      id: data.id,
 			name: data.name,
 			email: data.email,
 			entries: data.entries,
 			joined: data.joined,
 		});
+    localStorage.setItem('user', JSON.stringify(data));
+    setIsLoggedIn(true);
 	};
-
+  
 	const onSignOut = () => {
-		setUser(initState);
+    setUser(initState);
 		setIsLoggedIn(false);
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
 		navigate('/');
 	};
-
-	console.log('App.js user after loadUser:', user);
+	
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn));
+  }, [isLoggedIn]);
 
 	return (
 		<div className='app-container'>
@@ -59,7 +61,6 @@ function App() {
 					path='/home'
 					element={
 						<Home
-							name={user}
 							user={user}
 							setUser={setUser}
 							loadUser={loadUser}

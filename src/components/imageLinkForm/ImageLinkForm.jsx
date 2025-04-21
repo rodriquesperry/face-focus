@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import './imageLinkForm.css';
 
 const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
-  
 	return (
 		<div>
 			<p className='f3 center'>
