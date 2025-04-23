@@ -10,7 +10,7 @@ const Register = ({ loadUser }) => {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const navigate = useNavigate();
+	const navigate = useNavigate();  
 
 	const onNameChange = (e) => {
 		setName(e.target.value);
@@ -25,6 +25,8 @@ const Register = ({ loadUser }) => {
 	};
 
 	const handleRegistration = async () => {
+    console.log('url:', url);
+
 		try {
 			const response = await axios.post(`${url}/register`, {
 				name,
